@@ -1,0 +1,22 @@
+# Ignorar node_modules en backend y frontend
+/backend/node_modules/
+/ecommerce-frontend/node_modules/
+
+# Ignorar archivos de entorno
+/backend/.env
+/ecommerce-frontend/.env
+
+# Ignorar carpeta de configuración del editor VSCode
+.vscode/
+
+# Ignorar logs
+*.log
+logs/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales editores
+*.swp
+*.swo
