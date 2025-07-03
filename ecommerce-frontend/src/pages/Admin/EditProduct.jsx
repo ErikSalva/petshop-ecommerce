@@ -391,7 +391,7 @@ const EditProduct = () => {
         <div>
           <label className="block text-sm font-medium text-gray-700">Imágenes</label>
           <div className='flex gap-5'>
-            {existingImages?.map((image, index)=>(<img key={index} src={`${import.meta.env.VITE_API_URL}${image.filename}`} alt='imagen' width='200'/>))}
+            {existingImages?.map((image, index)=>(<img key={index} src={`https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/petshop-ecommerce/${image.filename}`} alt='imagen' width='200'/>))}
           </div>
           <input
             type="file"

@@ -101,7 +101,7 @@ const ProductInfo = ({ product }) => {
           {/* Imagen Principal */}
           <div className="overflow-hidden p-4">
             <img
-              src={`${import.meta.env.VITE_API_URL}${selectedImage.filename}`}
+              src={`https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/petshop-ecommerce/${selectedImage.filename}`}
               alt={title}
               className="
                 object-contain 
@@ -123,7 +123,7 @@ const ProductInfo = ({ product }) => {
                 }`}
               >
                 <img
-                  src={`${import.meta.env.VITE_API_URL}${img.filename}`}
+                  src={`https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/petshop-ecommerce/${img.filename}`}
                   alt={`Imagen ${index}`}
                   className="
                     object-cover

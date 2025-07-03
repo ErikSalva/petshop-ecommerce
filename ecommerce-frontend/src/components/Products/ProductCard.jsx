@@ -42,7 +42,7 @@ const ProductCard = ({ product, showActions = false, onDelete}) => {
           {/* Imagen */}
           <div className="bg-[#edfcfb] h-96 md:h-64 flex items-center justify-center overflow-hidden p-5">
             <img
-              src={images?.[0]?.filename ? `${import.meta.env.VITE_API_URL}${images[0].filename}` : null}
+              src={images?.[0]?.filename ? `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/petshop-ecommerce/${images[0].filename}` : null}
               alt={title}
               className="object-contain h-full w-full"
             />

@@ -1,19 +1,9 @@
 import multer from 'multer';
-import { v4 as uuidv4 } from 'uuid';
-import path from 'path';
 import { promises as fs } from 'fs';
+import { deleteFromCloudinary } from '../config/cloudinary.js';
 
 // Multer es un middleware para Express que gestiona la subida de archivos (multipart/form-data).
-// Configuración de almacenamiento
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.resolve('uploads')); // Guardar en uploads
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname).toLowerCase(); // Obtener extensión (.png, .jpg, etc.)
-    cb(null, uuidv4() + ext); // Asignar un nombre único usando UUID + extensión original
-  }
-});
+
 
 // Filtro para aceptar solo imágenes jpeg o png
 const fileFilter = (req, file, cb) => {
@@ -26,37 +16,48 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Almacenamiento en memoria
+const storage = multer.memoryStorage();
+
 // Configurar Multer
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB
+  }
 });
 
 export default upload;
 
-// Función para eliminar archivos en caso de rollback
-export const cleanupUploads = async (files) => {
+
+//Elimina imágenes de Cloudinary
+export const cleanupUploads = async (files, folder = 'petshop-ecommerce') => {
   if (!files?.length) return;
 
   for (const file of files) {
-    const filePath = path.join('uploads', file.filename);
     try {
-      await fs.unlink(filePath);
+      // Extraer UUID del filename (sin extensión)
+      const publicId = file.filename.split('.')[0];
+      await deleteFromCloudinary(publicId, folder);
+      console.log('Imagen eliminada de Cloudinary:', publicId);
     } catch (err) {
-      console.error('Error al eliminar archivo:', filePath, err.message);
+      console.error('Error al eliminar imagen de Cloudinary:', err.message);
     }
   }
 };
 
-export const cleanupUploadsByFilenames = async (filenames) => {
+// Elimina imágenes por nombres de archivo
+export const cleanupUploadsByFilenames = async (filenames, folder = 'petshop-ecommerce') => {
   if (!filenames?.length) return;
 
   for (const filename of filenames) {
-    const filePath = path.resolve('uploads', filename);
     try {
-      await fs.unlink(filePath);
+      const publicId = filename.split('.')[0];
+      await deleteFromCloudinary(publicId, folder);
+      console.log('Imagen eliminada de Cloudinary:', publicId);
     } catch (err) {
-      console.error('Error al eliminar archivo:', filePath, err.message);
+      console.error('Error al eliminar imagen de Cloudinary:', err.message);
     }
   }
 };

@@ -1,29 +1,42 @@
 import * as productService from './productService.js';
 import { cleanupUploads } from '../../middleware/uploadImagen.js';
 import { validationResult } from 'express-validator';
+import { uploadToCloudinary } from '../../config/cloudinary.js';
 
 const createProduct = async (req, res, next) => {
   // Valida los resultados de express-validator
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // Borrar los archivos subidos porque la validación falló
-    if (req.files?.length) {
-      await cleanupUploads(req.files);
-    }
     const err = new Error('Errores de validación'); 
     err.status = 400;
     err.details = errors.array();
     return next(err);
   }
+
+  const uploadedFiles = [];
   try {
+
+    // Subir las imágenes a Cloudinary
+    if (req.files?.length) {
+      for (const file of req.files) {
+        const format = file.mimetype.split('/')[1]; // 'jpeg' o 'png'
+        const result = await uploadToCloudinary(file.buffer, 'petshop-ecommerce', format);
+
+        // Solo guardamos el filename como querés
+        uploadedFiles.push({
+          filename: result.filename // esto es UUID + extensión
+        });
+      }
+    }
+
     //Todos los datos estan parseados  los array y demas porque si no form-data lo trae como string
     // Aca pasa al Service si la validación HTTP es exitosa
-    const data = await productService.createProduct(req.body, req.files);
+    const data = await productService.createProduct(req.body, uploadedFiles);
     res.status(201).json({ message: 'Producto creado con imagenes' });
   } catch (error) {
     // Elimina los archivos subidos si hay error
-    if (req.files?.length) {
-     await cleanupUploads(req.files);
+    if (uploadedFiles.length) {
+      await cleanupUploads(uploadedFiles); // Borramos solo con filename
     }
     next(error);
   }
@@ -76,22 +89,29 @@ const updateProduct = async (req, res, next) =>{
   // Valida los resultados de express-validator
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // Borrar los archivos subidos porque la validación falló
-    if (req.files?.length) {
-      await cleanupUploads(req.files);
-    }
     const err = new Error('Errores de validación'); 
     err.status = 400;
     err.details = errors.array();
     return next(err);
   }
+  const uploadedFiles = [];
   try {
-    const data = await productService.updateProduct(req.body, req.files, req.params.id);
+    if (req.files?.length) {
+      for (const file of req.files) {
+        const format = file.mimetype.split('/')[1]; // ejemplo: 'jpeg'
+        const result = await uploadToCloudinary(file.buffer, 'petshop-ecommerce', format);
+
+        uploadedFiles.push({
+          filename: result.filename // UUID.ext
+        });
+      }
+    }
+    const data = await productService.updateProduct(req.body, uploadedFiles, req.params.id);
     res.status(201).json({ message: 'Producto creado con imagenes', data });
   } catch (error) {
     // Elimina los archivos subidos si hay error
-    if (req.files?.length) {
-      await cleanupUploads(req.files);
+    if (uploadedFiles.length) {
+      await cleanupUploads(uploadedFiles);
     }
     next(error);
   }
@@ -106,7 +126,7 @@ const deleteProduct = async (req, res, next) => {
     if (result.wasDeactivated) {
       // Caso cuando el producto fue desactivado (tenía órdenes asociadas)
       res.status(200).json({ 
-        message: result.message || 'Producto desactivado (tenía pedidos asociados)',
+        message:'Producto desactivado (tenía pedidos asociados)',
         action: 'deactivated'
       });
     } else {

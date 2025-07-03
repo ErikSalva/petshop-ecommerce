@@ -323,7 +323,6 @@ export const deleteProduct = async (id) => {
       
       await cleanupUploadsByFilenames(oldImages.map(img => img.filename));
       return {
-        ...result,
         wasDeactivated: false
       };
     }

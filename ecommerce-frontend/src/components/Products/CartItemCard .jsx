@@ -4,7 +4,7 @@ import clienteAxios from '../../config/axios'
 import { handleAxiosError } from '../../helpers/handleAxiosError';
 
 const CartItemCard = ({ item, onItemUpdate, onItemDelete }) => {
-  const imageUrl = `${import.meta.env.VITE_API_URL}${item.variant.product.images[0]?.filename}`
+  const imageUrl = `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/petshop-ecommerce/${item.variant.product.images[0]?.filename}`
   const productLink = `/product/${item.variant.product.slug}${item.variant.product.id}`
 
   const [quantity, setQuantity] = useState(item.quantity)

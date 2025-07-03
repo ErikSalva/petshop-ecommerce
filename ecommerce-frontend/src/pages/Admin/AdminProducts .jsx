@@ -51,10 +51,11 @@ const AdminProducts  = () => {
       if (result.isConfirmed) {
         try {
           const response = await clienteAxios.delete('/products/' + productId, { withCredentials: true } )
+          console.log('llega acaaaa', response.data)
           Swal.fire({
-                    title: "Eliminado!",
-                    text: response.data.message + ': ' + response.data.product.title,
-                    icon: "success"
+              title: "Eliminado!",
+              text: response.data.message,
+              icon: "success"
           });
 
           fetchData()
