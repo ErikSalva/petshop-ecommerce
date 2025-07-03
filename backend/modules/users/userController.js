@@ -32,6 +32,7 @@ const authenticateUser = async (req, res, next) =>{
         res.cookie('_auth', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
+            sameSite: 'none',
             maxAge: 1000 * 60 * 60 * 24, // 1 dia de duracion del token
         });
         res.json({message: 'Autenticado correctamente'})

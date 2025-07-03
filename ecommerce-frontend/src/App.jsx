@@ -33,7 +33,6 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './routes/ProtectedRoute ';
 import GuestRoute from './routes/GuestRoute';
 
-import DragAndDropExample from './pages/DragAndDropExample';
 import Checkout from './pages/Checkout/Checkout ';
 function App() {
 
@@ -82,8 +81,6 @@ function App() {
           </Route>
 
           <Route path="/not-authorized" element={<NotAuthorized />} />
-
-          <Route path="/drag" element={<DragAndDropExample />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -4,6 +4,7 @@ import { FaInstagram } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa6";
 import { LuStore } from 'react-icons/lu'
+import { FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -40,8 +41,21 @@ const Footer = () => {
             <div className='flex gap-10'>
               <FaFacebook className='text-4xl hover:text-[#2fd7c3]'/>
               <FaSquareXTwitter className='text-4xl hover:text-[#2fd7c3]'/>
-              <FaInstagram className='text-4xl hover:text-[#2fd7c3]'/>
+               <a
+                href="https://www.instagram.com/erik_shalva/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaInstagram className='text-4xl hover:text-[#2fd7c3]' />
+              </a>
               <FaYoutube className='text-4xl hover:text-[#2fd7c3]'/>
+              <a
+                href="https://www.linkedin.com/in/eriksalvatierra/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaLinkedin className='text-4xl hover:text-[#2fd7c3]' />
+              </a>
             </div>
           </div>
 

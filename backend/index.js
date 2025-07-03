@@ -9,11 +9,19 @@ import indexRoutes from './routes/index.js'
 
 const app = express()
 
-app.use(cors({
-  origin: process.env.CORS_ORIGIN,
-  credentials: true // para permitir que se envien cookies entre distintos origenes
-}));
+const allowedOrigins = process.env.CORS_ORIGINS.split(',');
 
+app.use(cors({
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true); // para peticiones sin origin (Postman, curl)
+    if(allowedOrigins.includes(origin)){
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
+  credentials: true
+}));
 // Este middleware permite que Express pueda leer y procesar datos en formato JSON.
 // Es necesario cuando el frontend envía datos con Content-Type: 'application/json',
 // como por ejemplo usando fetch o axios con un body JSON.
